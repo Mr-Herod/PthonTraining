@@ -7,7 +7,22 @@ move_zeros([false,1,0,1,2,0,1,3,"a"]) # returns[false,1,1,2,1,3,"a",0,0]
 
 #My codes:
 
+def move_zeros(array):
+    count = array.count(0)
+    li = []
+    lens = len(array)
+    i = 0
+    while i < lens:
+        if array[i] == 0 and (type(array[i]) == type(0) or type(array[i]) == type(0.0)):
+            li.append(array[i])
+            del array[i]
 
+            lens -= 1
+        else:
+            i += 1
+    array.append(0)
+    array[-1:] = li
+    return array
 
 #Others codes:
 

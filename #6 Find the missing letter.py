@@ -20,6 +20,10 @@ I have also created other katas. Take a look if you enjoyed this kata!
 
 #My codes:
 
+def find_missing_letter(chars):
+    for i in range(0,len(chars)-1):
+        if ord(chars[i+1]) - ord(chars[i]) == 2:
+            return chr(ord(chars[i])+1)
 
 
 #Others codes:
