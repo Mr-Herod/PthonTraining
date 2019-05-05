@@ -16,16 +16,30 @@ Example input
  '# k#',
  '####']Example output
 False
+
 """
 
 My codes:
 
-def pack_bagpack(scores, weights, capacity):
-    pack= [0 for _ in range(1000)]
-    for i in range(len(scores)):
-        for j in range(capacity,weights[i]-1,-1):
-            pack[j] = max(pack[j-weights[i]]+scores[i],pack[j])
-    return pack[capacity]
+def has_exit(maze):
+    W = len(maze[0])                                                    # W = width of the maze
+    S = W * len(maze)                                                   # S = total cells in the maze
+    frontier, unseen = set(), set()                                     # Declaring sets that we'll use for BFS
+    for position, content in enumerate("".join(maze)):                  # Use 1D representation for unique address of each cell
+        (frontier.add, unseen.add, id)["k #".index(content)](position)  # Populate our sets: put Kate into frontier, passages into unseen
+    assert len(frontier) == 1                                           # Check for one and only one Kate
+    while frontier:                                                     # Do we still have any options to move further?
+        position = frontier.pop()                                       # Take out one of the options
+        if min(position, S - position) < W or -~position % W < 2:       # Is it on the edge?
+            return True                                                 # If so, we found an exit! Hurray!
+        for way in (position - W,                                       # Look up
+                    position + W,                                       # Look down
+                    position - 1,                                       # Look left
+                    position + 1):                                      # Look right
+            if way in unseen:                                           # If there is no wall, there is a way
+                frontier.add (way)                                      # Let's add this to our options
+                unseen.remove(way)                                      # We've seen it already
+    return False    
 
 Others codes:
 
@@ -49,21 +63,16 @@ def has_exit(maze):
     return False
 
 def has_exit(maze):
-    W = len(maze[0])                                                    # W = width of the maze
-    S = W * len(maze)                                                   # S = total cells in the maze
-    frontier, unseen = set(), set()                                     # Declaring sets that we'll use for BFS
-    for position, content in enumerate("".join(maze)):                  # Use 1D representation for unique address of each cell
-        (frontier.add, unseen.add, id)["k #".index(content)](position)  # Populate our sets: put Kate into frontier, passages into unseen
-    assert len(frontier) == 1                                           # Check for one and only one Kate
-    while frontier:                                                     # Do we still have any options to move further?
-        position = frontier.pop()                                       # Take out one of the options
-        if min(position, S - position) < W or -~position % W < 2:       # Is it on the edge?
-            return True                                                 # If so, we found an exit! Hurray!
-        for way in (position - W,                                       # Look up
-                    position + W,                                       # Look down
-                    position - 1,                                       # Look left
-                    position + 1):                                      # Look right
-            if way in unseen:                                           # If there is no wall, there is a way
-                frontier.add (way)                                      # Let's add this to our options
-                unseen.remove(way)                                      # We've seen it already
-    return False                                                        # We are out of options. So saaaad :(
+    vector, w = list("".join(maze)), len(maze[0])                # "vector" is 1D representation of the maze; "w" is the width of a maze row
+    assert vector.count("k") == 1                                # checking if there is one and only one Kate in the maze
+    while "k" in vector:                                         # cycle that pushes Kate clones into previously unvisited adjacent cells
+        for p, cell in enumerate(vector):                        # sweeping the maze...
+            if cell == "k":                                      # ...for Kate clones
+                if min(p, len(vector) - p) < w or -~p % w < 2:   # Kate clone at edge?
+                    return True                                  # exit found!
+                for direction in (-w, 1, w, -1):                 # otherwise look at adjacent cells
+                    if  vector[p + direction] == " ":            # to see if clone can pass through them
+                        vector[p + direction]  = "k"             # clone Kate where there is a passage
+                vector[p] = "+"                                  # mark cell as visited
+    return False                                                 # There is no exit :(
+

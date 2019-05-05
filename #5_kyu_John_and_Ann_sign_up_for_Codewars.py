@@ -38,29 +38,28 @@ second one : which($2) ->
 See "Sample Tests".
 Note:
 Keep an eye on performance.
+
 """
 
 My codes:
 
-def has_exit(maze):
-    W = len(maze[0])                                                    # W = width of the maze
-    S = W * len(maze)                                                   # S = total cells in the maze
-    frontier, unseen = set(), set()                                     # Declaring sets that we'll use for BFS
-    for position, content in enumerate("".join(maze)):                  # Use 1D representation for unique address of each cell
-        (frontier.add, unseen.add, id)["k #".index(content)](position)  # Populate our sets: put Kate into frontier, passages into unseen
-    assert len(frontier) == 1                                           # Check for one and only one Kate
-    while frontier:                                                     # Do we still have any options to move further?
-        position = frontier.pop()                                       # Take out one of the options
-        if min(position, S - position) < W or -~position % W < 2:       # Is it on the edge?
-            return True                                                 # If so, we found an exit! Hurray!
-        for way in (position - W,                                       # Look up
-                    position + W,                                       # Look down
-                    position - 1,                                       # Look left
-                    position + 1):                                      # Look right
-            if way in unseen:                                           # If there is no wall, there is a way
-                frontier.add (way)                                      # Let's add this to our options
-                unseen.remove(way)                                      # We've seen it already
-    return False    
+li_john = [0, 0, 1, 2, 2, 3, 4, 4, 5, 6, 6, 7, 7, 8]
+li_ann =  [1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6, 7, 8, 8]
+
+for i in range(14,1000000):
+    li_ann.append(i - li_john[li_ann[i-1]])
+    li_john.append(i - li_ann[li_john[i-1]])
+    
+def john(n):
+    return li_john[:n]
+def ann(n):
+    return li_ann[:n]
+    
+def sum_john(n):
+    return sum(li_john[:n])
+    
+def sum_ann(n):
+    return sum(li_ann[:n])
 
 Others codes:
 
@@ -86,24 +85,28 @@ def sum_john(n):
 def sum_ann(n):
    return sum(ann(n))
 
-def j_n(n):
-    j = [0]
-    a = [1]
-    for i in range(1, n):
-        j.append((i - a[j[i-1]]))
-        a.append((i-j[a[i-1]]))
-    return j, a
+from functools import lru_cache
 
+@lru_cache(maxsize = None)
+def john_value(n):
+    if n == 0:
+        return 0
+    return n - ann_value(john_value(n - 1))
+    
+@lru_cache(maxsize = None)
+def ann_value(n):
+    if n == 0:
+        return 1
+    return n - john_value(ann_value(n - 1))
+
+def ann(n):
+    return [ann_value(x) for x in range(n)]
 
 def john(n):
-    return j_n(n)[0]
-    
-def ann(n):
-    return j_n(n)[1]
-    
-        
+    return [john_value(x) for x in range(n)]
+
 def sum_john(n):
     return sum(john(n))
     
 def sum_ann(n):
-   return sum(ann(n))
+    return sum(ann(n))

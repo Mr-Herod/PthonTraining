@@ -34,6 +34,7 @@ Help Suzuki rake his garden!
 Suzuki needs help lining up his students!
 How many stairs will Suzuki climb in 20 years?
 
+
 """
 
 My codes:
@@ -59,19 +60,17 @@ def pack_basket(basket, pile):
         charges |= {c + d for d in charges if c + d <= basket}
     return 'The basket weighs %d kilograms' % max(charges)
 
-# Improvements over previous submission:
-# - Using regex to pull ints from pile; covers the 'dust123dust456' case (old sol'n would see [123456], new [123, 456])
-# - Added early-exit from loop: if a solution that completely fills the basket is found, return it immediately!
-
-import re
-
-def pack_basket(basket, pile):
-    dusted = (int(match.group(0)) for match in re.finditer(r'(\d+)', pile))
-    lumps_that_fit = (coal for coal in dusted if coal <= basket)
-    totals = set((0,))
-    template = 'The basket weighs {} kilograms'
-    for coal in lumps_that_fit:
-        totals |= set(coal + subtotal for subtotal in totals if coal + subtotal <= basket)
-        if basket in totals:
-            return template.format(basket)
-    return template.format(max(totals))
+from itertools import combinations
+def pack_basket(basket,pile):
+    rocks = sorted([int(x) for x in pile.replace('dust', ' ').replace('  ', ' ').split() if int(x) <= basket], reverse=True)
+    rocks = sorted([int(x) for x in pile.replace('dust', ' ').replace('  ', ' ').split() if int(x) <= basket], reverse=True)
+    print(rocks)
+    if sum(rocks) <= basket: return "The basket weighs {0} kilograms".format(sum(rocks))
+    if max(rocks) == basket: return "The basket weighs {0} kilograms".format(basket)
+    maxcombo = 0
+    for i in range(len(rocks) + 1):
+        for combo in combinations(rocks, i):
+            tst = sum(combo)
+            if tst == basket: return "The basket weighs {0} kilograms".format(basket)
+            if tst > maxcombo and tst <= basket: maxcombo = tst
+    return "The basket weighs {0} kilograms".format(maxcombo)

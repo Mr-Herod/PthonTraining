@@ -26,24 +26,32 @@ For Go: nil slice is expected when there are no gap between m and n.
 Example: gap(11,30000,100000) --> nil
 #Ref
 https://en.wikipedia.org/wiki/Prime_gap
+
 """
 
 My codes:
 
-def order_weight(strng):
-    new = [(sum([int(x) for x in i]),i)for i in strng.split()]
-    lens = len(new)
-    for i in range(lens):
-        mi = i
-        for j in range(i+1,lens):
-            if new[j][0] < new[mi][0]:
-                mi = j
-            elif new[j][0] == new[mi][0]:
-                if new[j][1] < new[mi][1]:
-                    mi = j
-        if i != j:
-            new[mi],new[i] = new[i],new[mi]
-    return " ".join([x[1] for x in new])
+import math
+def gap(g, m, n):
+    
+    if m%2 == 0:
+        m += 1
+    for i in range(m,n+1,2):
+        if isprime(i) and isprime(i+g) and not sum([isprime(x) for x in range(i+1,i+g)]):
+            return [i,i+g]
+    return None
+
+def isprime(number):
+    if number > 1:
+        if number == 2:
+            return 1
+        if number % 2 == 0:
+            return 0
+        for current in range(3, int(math.sqrt(number) + 1), 2):
+            if number % current == 0: 
+                return 0
+        return 1
+    return 0
 
 Others codes:
 
@@ -64,8 +72,56 @@ def is_prime(n):
     return True
 
 def gap(g, m, n):
-    prev = 2
-    for x in range(m|1, n + 1, 2):
-        if all(x%d for d in range(3, int(x**.5) + 1, 2)):
-            if x - prev == g: return [prev, x]
-            prev = x
+    
+    def _try_composite(a, d, n, s):
+        if pow(a, d, n) == 1:
+            return False
+        for i in range(s):
+            if pow(a, 2**i * d, n) == n-1:
+                return False
+        return True # n  is definitely composite
+
+    # Miller-Rabin primarility test (rosettacode implementation)
+    def is_prime(n, _precision_for_huge_n=16):
+        if n in _known_primes or n in (0, 1):
+            return True
+        if any((n % p) == 0 for p in _known_primes):
+            return False
+        d, s = n - 1, 0
+        while not d % 2:
+            d, s = d >> 1, s + 1
+        # Returns exact according to http://primes.utm.edu/prove/prove2_3.html
+        if n < 1373653: 
+            return not any(_try_composite(a, d, n, s) for a in (2, 3))
+        if n < 25326001: 
+            return not any(_try_composite(a, d, n, s) for a in (2, 3, 5))
+        if n < 118670087467: 
+            if n == 3215031751: 
+                return False
+            return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7))
+        if n < 2152302898747: 
+            return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
+        if n < 3474749660383: 
+            return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
+        if n < 341550071728321: 
+            return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
+        # otherwise
+        return not any(_try_composite(a, d, n, s) 
+                       for a in _known_primes[:_precision_for_huge_n])
+
+    _known_primes = [2, 3]
+    _known_primes += [x for x in range(5, 1000, 2) if is_prime(x)]
+
+    # Check initial pre-conditions
+    assert((g, m) >= (2, 2))
+    assert(n >= m)    
+    
+    a, b = None, None
+    
+    for current in xrange(m + 1 if m % 2 == 0 else m, n, 2):
+        if is_prime(current):
+            a, b = b, current
+            if a is not None and b is not None and (b - a) == g:
+                    return [a, b]
+        
+    return None

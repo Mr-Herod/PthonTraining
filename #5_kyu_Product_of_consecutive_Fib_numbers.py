@@ -88,25 +88,22 @@ You can see examples in "Example test".
 References
 http://en.wikipedia.org/wiki/Fibonacci_number
 http://oeis.org/A000045
+
 """
 
 My codes:
 
-def convertFracts(lst):
-    if not lst:
-        return []
-    greater = lcm([x[1] for x in lst])
-    return [[int(greater/x[1])*x[0],greater] for x in lst]
-
-def lcm(lst):
-    while len(lst) > 1:
-        n,m = max(lst[-1],lst[-2]),min(lst[-1],lst[-2])
-        while n%m:
-            m,n = n%m,m
-        lst[-2] = int(lst[-1]*lst[-2]/m)
-        print(lst[-2])
-        lst.pop(-1)
-    return lst[0]
+def productFib(prod):
+    fab = [1,1,2,3,5]
+    for i in range(1000):
+        fab.append(fab[-1]+fab[-2])
+    ans = []
+    for i in range(1000):
+        ans.append(fab[i]*fab[i+1])
+        if ans[-1] == prod:
+            return [fab[i],fab[i+1],True]
+        elif ans[-1] > prod:
+            return [fab[i],fab[i+1],False]
 
 Others codes:
 
@@ -121,3 +118,5 @@ def productFib(prod):
     while prod > a * b:
         a, b = b, a + b
     return [a, b, prod == a * b]
+
+

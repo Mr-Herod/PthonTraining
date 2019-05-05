@@ -29,12 +29,13 @@ addTwo + 5; // 7
 addTwo(3); // 5
 addTwo(3).(5); // 10
 We can assume any number being passed in will be valid whole number. 
+
 """
 
 My codes:
 
-class add(int):
-    __call__ = lambda self, value: add(self + value)
+
+
 
 Others codes:
 
@@ -43,5 +44,5 @@ class add(int):
         return add(self+n)
 
 class add(int):
-    def __call__(self, n):
+    def __call__(self,n):
         return add(self + n)

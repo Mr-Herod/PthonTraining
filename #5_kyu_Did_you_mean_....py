@@ -42,23 +42,38 @@ Additional notes:
 
 there is always exactly one possible solution
 
+
 """
 
 My codes:
 
-def count_patterns_from(firstPoint, length):
-    if length > 9 or length <= 0:
-        return 0
-    if length == 9:
-        length = 8
-    print(firstPoint, length)
-    ans = {'A':[0,1,5,31,154,684,2516,7104,13792],'B':[0,1,7,37,256,816,4248,8118,15564],\
-           'C':[0,1,5,31,154,684,2516,7104,13792],'D':[0,1,7,37,188,816,2926,8118,15564],\
-           'E':[0,1,8,48,256,1152,4248,12024,23280],'F':[0,1,7,37,188,816,4248,8118,15564],\
-           'G':[0,1,5,31,154,684,2516,7104,13792],'H':[0,1,7,37,256,816,2926,8118,15564],\
-           'I':[0,1,5,31,154,684,2516,7104,13792]
-          }
-    return ans[firstPoint][length]
+class Dictionary:
+    def __init__(self,words):
+        self.words = words
+        self.get_words()
+    def find_most_similar(self,term):
+        print(term)
+        most = 1000
+        lens = len(term)
+        ans = self.words[0]
+        for i in self.words:
+            for k in range(len(i)):
+                si = 0
+                for j in range(lens):
+                    try:
+                        if term[j] != i[k+j]:
+                            si += 1
+                    except:
+                        si += k
+                        break
+                si += abs(len(i) - lens)
+                #print(si,i)
+                if si < most:
+                    most = si
+                    ans = i
+        return ans
+    def get_words(self):
+        print(self.words)
 
 Others codes:
 
@@ -89,12 +104,36 @@ class Dictionary:
             dist[word] = LevenshteinDistance(word, term)
         return min(dist, key=dist.get)
 
-from difflib import get_close_matches
+from itertools import izip, cycle
+
+def cache_it(function):
+    cache = {}
+    def dec_cache_it(*args):
+        entry = cache.get(args)
+        if not entry:
+            entry = function(*args)
+            cache[args] = entry
+        return entry
+    return dec_cache_it
+
+@cache_it
+def dist(lhs, rhs, l=0, r=0):
+    if l == len(lhs): return len(rhs) - r
+    if r == len(rhs): return len(lhs) - l
+    d = bool(lhs[l] != rhs[r])
+    return d  + min(dist(lhs, rhs, l + 1, r + 1),
+                    dist(lhs, rhs, l + 1, r),
+                    dist(lhs, rhs, l, r + 1))
 
 class Dictionary:
     def __init__(self, words):
         self.words = words
+        
+    def _find_most_similar(self, term):
+        for word in words:
+            yield dist(word, term), word
+        
     def find_most_similar(self, term):
-        # Ok i'm cheating on one test. But check out difflib :) !
-        if term == "rkacypviuburk": return "zqdrhpviqslik"
-        return get_close_matches(term, self.words, cutoff=0)[0]
+        return min(self._find_most_similar(term), key=lambda e: e[0])[1]
+        
+

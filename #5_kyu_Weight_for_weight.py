@@ -25,41 +25,40 @@ it may happen that the input string have leading, trailing whitespaces and more 
 Don't modify the input
 For C: The result is freed.
 
+
 """
 
 My codes:
 
-def solve_runes(runes):
-    runes = runes.replace("--","+")
-    li = ["1","2","3","4","5","6","7","8","9","0"]
-    if runes[-2:] == "??":
-        try:
-            li.remove("0")
-        except:
-            pass
-    for i in runes:
-        if i.isdigit():
-            try:
-                li.remove(i)
-            except:
-                pass
-    new = [runes for _ in range(len(li))]
-    ans = []
-    for i in range(len(li)):
-        try:
-            if int(eval(new[i].replace("?",li[i],runes.count("?")).split("=")[0]))== int(new[i].replace("?",li[i],runes.count("?")).split("=")[1]):
-                ans.append(int(li[i]))
-        except:
-            continue
-    if ans:
-        return min(ans)
-    return -1
+def order_weight(strng):
+    new = [(sum([int(x) for x in i]),i)for i in strng.split()]
+    lens = len(new)
+    for i in range(lens):
+        mi = i
+        for j in range(i+1,lens):
+            if new[j][0] < new[mi][0]:
+                mi = j
+            elif new[j][0] == new[mi][0]:
+                if new[j][1] < new[mi][1]:
+                    mi = j
+        if i != j:
+            new[mi],new[i] = new[i],new[mi]
+    return " ".join([x[1] for x in new])
 
 Others codes:
 
 def order_weight(_str):
     return ' '.join(sorted(sorted(_str.split(' ')), key=lambda x: sum(int(c) for c in x)))
 
-def order_weight(_str):
-  return ' '.join(sorted(sorted(_str.split(' ')), key=lambda x: sum(int(c) for c in x)))
+def sum_string(s):
+    sum = 0
+    for digit in s:
+        sum += int(digit)
+    return sum
+
+def order_weight(strng):
     # your code
+    initial_list = sorted(strng.split())
+    result = " ".join(sorted(initial_list, key=sum_string))
+    
+    return result

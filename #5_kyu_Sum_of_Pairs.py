@@ -26,33 +26,18 @@ sum_pairs([10, 5, 2, 3, 7, 5],         10)
 == [3, 7]
 Negative numbers and duplicate numbers can and will appear.
 NOTE: There will also be lists tested of lengths upwards of 10,000,000 elements. Be sure your code doesn't time out.
+
 """
 
 My codes:
 
-class Calculator(object):
-    def evaluate(self, string):
-        if not string:
-            return None
-        new = string.split()
-        num = [float(new[0])]
-        lens = len(new)
-        x = 1
-        while x < lens:
-            if new[x] == "*":
-                num[-1] = num[-1]*float(new[x+1])
-            elif new[x]  == "/":
-                num[-1] = num[-1]/float(new[x+1])
-            elif new[x]  == "-":
-                num.append(-float(new[x+1]))
-            elif new[x]  == "+":
-                num.append(float(new[x+1]))
-            x += 2
-        ans = sum(num)
-        if ans == int(ans):
-            return int(ans)
-        else:
-            return ans
+def sum_pairs(ints, s):
+    cache = set()
+    for i in ints:
+        other = s - i
+        if other in cache:
+            return [other, i]
+        cache.add(i)
 
 Others codes:
 
@@ -64,10 +49,9 @@ def sum_pairs(lst, s):
         cache.add(i)
 
 
-def sum_pairs(lst, s):  
-    cache = set()  
-    for i in lst:  
-        if s - i in cache:  
-            return [s - i, i]  
+def sum_pairs(lst, s):
+    cache = set()
+    for i in lst:
+        if s - i in cache:
+            return [s - i, i]
         cache.add(i)
-    

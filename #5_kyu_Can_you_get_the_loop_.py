@@ -29,31 +29,22 @@ Thanks to shadchnev, I broke all of the methods from the Hash class.
 
 Don't miss dmitry's article in the discussion after you pass the Kata !! 
 
+
 """
 
 My codes:
 
-import math
-def gap(g, m, n):
-    
-    if m%2 == 0:
-        m += 1
-    for i in range(m,n+1,2):
-        if isprime(i) and isprime(i+g) and not sum([isprime(x) for x in range(i+1,i+g)]):
-            return [i,i+g]
-    return None
-
-def isprime(number):
-    if number > 1:
-        if number == 2:
-            return 1
-        if number % 2 == 0:
-            return 0
-        for current in range(3, int(math.sqrt(number) + 1), 2):
-            if number % current == 0: 
-                return 0
-        return 1
-    return 0
+def loop_size(node):
+    dic = {}
+    tmp = 1
+    while True:
+        try:
+            print(dic[node])
+            return tmp - dic[node]
+        except:
+            dic[node] = tmp
+        tmp += 1
+        node = node.next
 
 Others codes:
 
@@ -82,6 +73,7 @@ def loop_size(node):
     # voila
     return count
 
+
 def loop_size(node):
     index = {}
     i = 0
@@ -91,3 +83,4 @@ def loop_size(node):
         index[node] = i
         node = node.next
         i += 1
+

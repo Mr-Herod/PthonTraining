@@ -31,6 +31,7 @@ A more significant units of time will occur before than a least significant one.
 Different components have different unit of times. So there is not repeated units like in 5 seconds and 1 second.
 A component will not appear at all if its value happens to be zero.  Hence, 1 minute and 0 seconds is not valid, but it should be just 1 minute.
  A unit of time must be used "as much as possible". It means that the function should not return 61 seconds, but 1 minute and 1 second instead.  Formally, the duration specified by  of a component must not be greater than any valid more significant unit of time.
+
 """
 
 My codes:
@@ -93,23 +94,21 @@ def format_duration(seconds):
     return ', '.join(chunks[:-1]) + ' and ' + chunks[-1] if len(chunks) > 1 else chunks[0]
 
 
+times=[('year',365*24*60*60),
+    ('day',24*60*60),
+    ('hour',60*60),
+    ('minute',60),
+    ('second',1)]
 def format_duration(seconds):
-    times = [("year", 365 * 24 * 60 * 60), 
-         ("day", 24 * 60 * 60),
-         ("hour", 60 * 60),
-         ("minute", 60),
-         ("second", 1)]
+    #your code here
     if not seconds:
-        return "now"
-
-    chunks = []
-    for name, secs in times:
-        qty = seconds // secs
+        return 'now'
+    chunks=[]
+    for name,secs in times:
+        qty=seconds//secs
         if qty:
-            if qty > 1:
-                name += "s"
-            chunks.append(str(qty) + " " + name)
-
-        seconds = seconds % secs
-
-    return ', '.join(chunks[:-1]) + ' and ' + chunks[-1] if len(chunks) > 1 else chunks[0]
+            if qty>1:
+                name+='s'
+            chunks.append(str(qty)+' '+name)
+        seconds = seconds %secs
+    return (', '.join(chunks[:-1]) + ' and ' + chunks[-1] if len(chunks) > 1 else chunks[0])

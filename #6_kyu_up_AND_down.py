@@ -35,15 +35,27 @@ Process: go from left to right, move only consecutive strings when needed.
 For the first fixed tests the needed number of moves to get property (P) 
 is given as a comment so that you can know if your process follows the rule.
 
+
 """
 
 My codes:
 
-def first_non_repeating_letter(string):
-    for i in string:
-        if string.lower().count(i.lower()) == 1:
-            return i
-    return ''
+def arrange(strng):
+    new = strng.split(" ")
+    for i in range(1,len(new)):
+        if i % 2:
+            if len(new[i-1]) > len(new[i]):
+                new[i],new[i-1] = new[i-1],new[i]
+            new[i-1] = new[i-1].lower()
+        else:
+            if len(new[i-1]) < len(new[i]):
+                new[i],new[i-1] = new[i-1],new[i]
+            new[i-1] = new[i-1].upper()
+    if len(new) % 2:
+        new[-1] = new[-1].lower()
+    else:
+        new[-1] = new[-1].upper()
+    return " ".join(new)
 
 Others codes:
 
@@ -54,15 +66,28 @@ def arrange(strng):
         words[i] = words[i].upper() if i%2 else words[i].lower()
     return ' '.join(words)
 
-def arrange(strng):
-    res = strng.split(" ")   
-    for i in range(0, len(res) - 1):
-        if ((i & 1 == 1) and (len(res[i]) < len(res[i + 1]))) or ((i & 1 == 0) and (len(res[i]) > len(res[i + 1]))):
-            res[i], res[i + 1] = res[i + 1], res[i]
-    r = []
-    for i in range(0, len(res)):
-        if (i & 1 == 0):
-            r.append(res[i].lower())
-        else:
-            r.append(res[i].upper())
-    return " ".join(r)
+def arrange (string):
+    from itertools import cycle
+    
+    def swapped (sequence, key=len):
+        from operator import gt, lt
+        swaps = cycle([gt, lt])        
+        items = iter(sequence)
+        buffer = next(items)
+        for item, swap in zip(items, swaps):
+            if swap(key(buffer), key(item)):
+                buffer, item = item, buffer
+            yield buffer
+            buffer = item
+        yield buffer
+        
+    def cased (sequence):
+        cases = cycle([str.lower, str.upper])
+        return (case(item) for case, item 
+                in zip(cases, sequence))
+        
+    return ' '.join(cased(swapped(string.split())))
+    
+    
+    
+    

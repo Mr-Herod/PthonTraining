@@ -41,16 +41,31 @@ some tests will include very large numbers.
 test data only employs positive integers.
 
 The function you write for this challenge is the inverse of this kata: "Next bigger number with the same digits."
+
 """
 
 My codes:
 
-def isValidWalk(walk):
-    if (len(walk) != 10):
-        return False
-    if(walk.count("n") == walk.count("s") and walk.count("e") == walk.count("w")):
-        return True
-    return False
+def next_smaller(n):
+    l1 = list(str(n))
+    l1.reverse()
+    flag = False
+    for i in range(len(l1)):
+        for j in range(i):
+            if l1[j] < l1[i]:
+                flag = True
+                break
+        if flag:
+            break
+    if flag:
+        l1[i],l1[j] = l1[j],l1[i]
+        l1[:i] = sorted(l1[:i])
+    if l1[-1] == '0':
+        return -1
+    if "".join(reversed(l1)) != str(n):
+        return int("".join(reversed(l1)))
+    else:
+        return -1
 
 Others codes:
 
@@ -66,12 +81,12 @@ def next_smaller(n):
     return int(''.join(s))
 
 def next_smaller(n):
-   s = list(str(n))
-   i = j = len(s) - 1
-   while i > 0 and s[i - 1] <= s[i]: i -= 1
-   if i <= 0: return -1
-   while s[j] >= s[i - 1]: j -= 1
-   s[i - 1], s[j] = s[j], s[i - 1]
-   s[i:] = reversed(s[i:])
-   if s[0] == '0': return -1
-   return int(''.join(s))
+  s = list(str(n))
+  i = j = len(s) - 1
+  while i > 0 and s[i - 1] <= s[i]: i -= 1
+  if i <= 0: return -1
+  while s[j] >= s[i - 1]: j -= 1
+  s[i - 1], s[j] = s[j], s[i - 1]
+  s[i:] = reversed(s[i:])
+  if s[0] == '0': return -1
+  return int(''.join(s))

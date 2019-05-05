@@ -10,6 +10,7 @@ countOnes 4 7 should return 8, because:
 6(dec) = 110(bin), which adds 2 to the result.
 7(dec) = 111(bin), which adds 3 to the result.
 So finally result equals 8.WARNING: Segment may contain billion elements, to pass this kata, your solution cannot iterate through all numbers in the segment!
+
 """
 
 My codes:
@@ -38,16 +39,5 @@ def count(n):
 def countOnes(left, right):
     return count(right) - count(left - 1)
 
-from math import log2
-
-
-def countOnes(left, right): return countUpTo(right) - countUpTo(left-1)
-
-def countUpTo(n):
-    s = 0
-    while n:
-        p = n.bit_length()-1
-        p2 = 1<<p
-        s += p * (p2>>1) + n-p2+1
-        n &= ~p2
-    return s
+sumOnes = lambda n: (lambda msb: n and -~n + ~-msb * 2 ** msb + sumOnes(n - 2 ** -~msb))(n.bit_length() - 2)
+countOnes = lambda a, b: sumOnes(b) - sumOnes(a-1)

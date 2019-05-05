@@ -9,6 +9,7 @@ Examples
 "(())((()())())"  =>  trueConstraints
 0 <= input.length <= 100
 Along with opening (() and closing ()) parenthesis, input may contain any valid ASCII characters.  Furthermore, the input string may be empty and/or not contain any parentheses at all.  Do not treat other forms of brackets as parentheses (e.g. [], {}, <>).
+
 """
 
 My codes:
@@ -36,11 +37,10 @@ def valid_parentheses(string):
         if cnt < 0: return False
     return True if cnt == 0 else False
 
-def valid_parentheses(string):
-    cnt = 0
-    for char in string:
-        if char == '(': cnt += 1
-        if char == ')': cnt -= 1
-        if cnt < 0: return False
-    return True if cnt == 0 else False
-    
+def valid_parentheses(string):  
+    cnt = 0  
+    for char in string:  
+        if char == '(': cnt += 1  
+        if char == ')': cnt -= 1  
+        if cnt < 0: return False  
+    return True if cnt == 0 else False 

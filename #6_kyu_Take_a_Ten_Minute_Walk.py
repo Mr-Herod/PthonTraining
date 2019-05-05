@@ -5,26 +5,17 @@ You live in the city of Cartesia where all roads are laid out in a perfect grid.
 
 Note: you will always receive a valid array containing a random assortment of direction letters ('n', 's', 'e', or 'w' only).  It will never give you an empty array (that's not a walk, that's standing still!).
 
+
 """
 
 My codes:
 
-def arrange(strng):
-    new = strng.split(" ")
-    for i in range(1,len(new)):
-        if i % 2:
-            if len(new[i-1]) > len(new[i]):
-                new[i],new[i-1] = new[i-1],new[i]
-            new[i-1] = new[i-1].lower()
-        else:
-            if len(new[i-1]) < len(new[i]):
-                new[i],new[i-1] = new[i-1],new[i]
-            new[i-1] = new[i-1].upper()
-    if len(new) % 2:
-        new[-1] = new[-1].lower()
-    else:
-        new[-1] = new[-1].upper()
-    return " ".join(new)
+def isValidWalk(walk):
+    #determine if walk is valid
+    if len(walk) != 10: return False
+    if walk.count('n') == walk.count('s') and walk.count('e') == walk.count('w'):
+        return True
+    return False
 
 Others codes:
 
@@ -32,4 +23,5 @@ def isValidWalk(walk):
     return len(walk) == 10 and walk.count('n') == walk.count('s') and walk.count('e') == walk.count('w')
 
 def isValidWalk(walk):
-  return len(walk)==10 and walk.count('n')==walk.count('s') and walk.count('e')==walk.count('w')
+    return len(walk) == 10 and walk.count('n') == walk.count('s') and walk.count('e') == walk.count('w')
+    
